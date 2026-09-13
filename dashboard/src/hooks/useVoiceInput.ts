@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { voiceApi, type ActiveVoice } from "../api/modules/voice";
+import { apiErrorMessage, parseApiError } from "../utils/apiError";
 import { speechLocaleFromUi } from "../utils/localePrefs";
 import { cachedActiveVoice, fetchActiveVoice } from "./useVoiceConfig";
 
@@ -283,11 +284,12 @@ export function useVoiceInput(onText: (text: string) => void) {
       if (text) onText(text);
       else antMessage.info(t("voice.sttEmpty"));
     } catch (err) {
+      const code = parseApiError(err)?.code;
       const msg = err instanceof Error ? err.message : "";
-      if (msg.includes("VOICE_BROWSER_ONLY") || msg.includes("422")) {
+      if (code === "VOICE_BROWSER_ONLY" || msg.includes("422")) {
         antMessage.error(t("voice.sttProviderRequired"));
       } else {
-        antMessage.error(t("voice.sttFailed"));
+        antMessage.error(apiErrorMessage(err, t("voice.sttFailed"), t));
       }
     } finally {
       setTranscribing(false);

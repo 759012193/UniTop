@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { voiceApi } from "../api/modules/voice";
+import { apiErrorMessage } from "../utils/apiError";
 import { cachedActiveVoice, fetchActiveVoice } from "./useVoiceConfig";
 import {
   ensureAudioUnlocked,
@@ -158,7 +159,7 @@ export function useVoiceOutput() {
         if (isAutoplayBlockedError(err)) {
           antMessage.warning(t("voice.ttsAutoplayBlocked"));
         } else {
-          antMessage.error(t("voice.ttsFailed"));
+          antMessage.error(apiErrorMessage(err, t("voice.ttsFailed"), t));
         }
         finishSpeaking();
       }
