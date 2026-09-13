@@ -462,8 +462,8 @@ def _probe_tone_wav() -> bytes:
     return _wav_header(len(pcm), _PROBE_TONE_RATE) + pcm
 
 
-def _missing_credentials(row: VoiceProviderRow, kind: str) -> str | None:
-    """Probe-time credential check; returns an error message when incomplete."""
+def credentials_error(row: VoiceProviderRow, kind: str) -> str | None:
+    """Config-level credential check shared by probes and TTS preflight."""
     if kind == "tencent":
         try:
             _parse_tencent_credentials(row)
@@ -473,6 +473,10 @@ def _missing_credentials(row: VoiceProviderRow, kind: str) -> str | None:
     if kind in {"openai", "mimo"} and not row.api_key:
         return "API credentials missing"
     return None
+
+
+# Probe helpers keep the private name; usage-path preflight imports the public one.
+_missing_credentials = credentials_error
 
 
 def _probe_failure(exc: Exception) -> dict[str, Any]:
