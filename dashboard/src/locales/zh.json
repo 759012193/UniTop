@@ -3230,6 +3230,19 @@
     "tooLarge": "文件过大（最大 {{maxMb}}MB）：{{name}}",
     "failed": "上传失败"
   },
+  "mention": {
+    "empty": "没有匹配项",
+    "connectors": "连接器",
+    "experts": "专家",
+    "subagents": "子智能体",
+    "files": "工作区文件",
+    "typeToSearch": "输入文件名搜索",
+    "typeMore": "至少输入两个字符搜索文件",
+    "searching": "正在搜索…",
+    "filesEmpty": "没有匹配的文件",
+    "filesNeedAgent": "Agent 运行后才能引用文件",
+    "filesFailed": "无法搜索工作区文件"
+  },
   "modelConfig": {
     "promptTitle": "需要配置大语言模型",
     "promptMessage": "聊天功能需要大语言模型才能运行。未配置模型时，对话和消息无法发送到后端进行处理和保存，刷新页面后将会丢失。是否立即配置模型？",
