@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from harness_agent.compaction import display_offload_path
 from harness_agent.slash import SlashCommand, SlashSink, thread_message_count
 
 from octop.i18n.domains.agents import agent_error_message
@@ -45,6 +46,11 @@ def _format_slash_user(
     return tr("status.user_fmt", locale, username=row.username, user_id=user_id)
 
 
+def _short_offload_path(raw_path: str) -> str:
+    """Compat wrapper; prefer ``CompactResult.display_path`` from harness."""
+    return display_offload_path(raw_path)
+
+
 def _resolve_agent_row(ctx: SlashCtx) -> Any:
     if ctx.agent_manager is not None:
         return ctx.agent_manager.get_row(ctx.agent_id)
@@ -62,8 +68,6 @@ async def cmd_compact(
     ``conversation_history`` offload via ``_summarization_event``). Unlike
     ``/new``, it does **not** create a fresh thread.
     """
-    from pathlib import Path  # noqa: PLC0415
-
     lang = lang_of(ctx)
     tid = ctx.thread_registry.get_bound_thread_id(ctx.session_key)
     if not tid:
@@ -117,20 +121,18 @@ async def cmd_compact(
 
     count = int(getattr(result, "summarized_count", 0) or 0)
     raw_path = getattr(result, "file_path", None) or ""
-    if raw_path:
-        p = Path(str(raw_path))
-        # Prefer short workspace-relative display over absolute host paths.
-        # Offloads land under ``{system_files_path}/conversation_history/``
-        # (Octop default: ``.octop/conversation_history/``).
-        parts = [part for part in p.parts if part not in ("/", "\\")]
-        if "conversation_history" in parts:
-            idx = parts.index("conversation_history")
-            start = idx - 1 if idx > 0 and parts[idx - 1].startswith(".") else idx
-            short_path = "/".join(parts[start:])
-        else:
-            short_path = f"conversation_history/{p.name}" if p.name else str(raw_path)
+    path = (getattr(result, "display_path", None) or "").strip() or (
+        display_offload_path(raw_path) if raw_path else ""
+    )
+    if path:
         await sink.text(
-            tr("compact.done_offload", lang, count=count, short=tid[-6:], path=short_path)
+            tr(
+                "compact.done_offload",
+                lang,
+                count=count,
+                short=tid[-6:],
+                path=path,
+            )
         )
     else:
         await sink.text(tr("compact.done", lang, count=count, short=tid[-6:]))
