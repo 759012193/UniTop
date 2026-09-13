@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import json
+import math
 import struct
 import uuid
 from collections.abc import AsyncIterator
@@ -447,6 +448,20 @@ async def synthesize_mimo(
                 yield pcm
 
 
+_PROBE_TONE_RATE = 16000
+_PROBE_TONE_SECONDS = 1.0
+
+
+def _probe_tone_wav() -> bytes:
+    """Deterministic probe payload: 1s 440Hz tone as 16kHz mono PCM16 WAV."""
+    n = int(_PROBE_TONE_RATE * _PROBE_TONE_SECONDS)
+    pcm = struct.pack(
+        f"<{n}h",
+        *[int(1000 * math.sin(2 * math.pi * 440 * i / _PROBE_TONE_RATE)) for i in range(n)],
+    )
+    return _wav_header(len(pcm), _PROBE_TONE_RATE) + pcm
+
+
 def _missing_credentials(row: VoiceProviderRow, kind: str) -> str | None:
     """Probe-time credential check; returns an error message when incomplete."""
     if kind == "tencent":
@@ -480,9 +495,23 @@ async def test_stt(row: VoiceProviderRow | None, kind: str) -> dict[str, Any]:
         return {"ok": True, "mode": "browser"}
     if row is None:
         return {"ok": False, "error": "provider not configured"}
+    if kind not in {"openai", "tencent", "mimo"}:
+        # edge is TTS-only and unknown kinds have no adapter: keep offline pass.
+        return {"ok": True, "mode": kind}
     missing = _missing_credentials(row, kind)
     if missing:
         return {"ok": False, "error": missing}
+    transcribe = (
+        transcribe_mimo
+        if kind == "mimo"
+        else transcribe_openai
+        if kind == "openai"
+        else transcribe_tencent
+    )
+    try:
+        await transcribe(row, _probe_tone_wav(), mime="audio/wav", language="zh-CN")
+    except Exception as exc:  # probe reports failures, never 500s
+        return _probe_failure(exc)
     return {"ok": True, "mode": kind}
 
 
