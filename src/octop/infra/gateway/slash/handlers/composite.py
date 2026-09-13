@@ -15,6 +15,7 @@ from octop.i18n.domains.slash import localized_rows, tr
 from octop.infra.gateway.slash.ctx import SlashCtx, ensure_thread_id, lang_of
 from octop.infra.gateway.slash.formatting import (
     format_duration,
+    format_unix_datetime,
     markdown_kv_block,
     server_uptime_label,
 )
@@ -160,7 +161,12 @@ async def cmd_history(
     if row is not None:
         rows.append(("pinned", tr("yes", lang) if row.pinned else tr("no", lang)))
         if row.last_active:
-            rows.append(("last_active", str(row.last_active)))
+            rows.append(
+                (
+                    "last_active",
+                    format_unix_datetime(int(row.last_active), ctx.default_timezone),
+                )
+            )
     override = d.get_thread_model_override(ctx, tid)
     if override:
         rows.append(("model_override", override))
