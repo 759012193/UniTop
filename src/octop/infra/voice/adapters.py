@@ -473,9 +473,7 @@ def _probe_tone_wav() -> bytes:
     return _wav_header(len(pcm), _PROBE_TONE_RATE) + pcm
 
 
-def _missing_credentials(
-    row: VoiceProviderRow, kind: str, *, locale: str = "en"
-) -> str | None:
+def _missing_credentials(row: VoiceProviderRow, kind: str, *, locale: str = "en") -> str | None:
     """Probe-time credential check; returns an error message when incomplete."""
     if kind == "tencent":
         try:
