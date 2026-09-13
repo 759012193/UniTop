@@ -3233,6 +3233,19 @@
     "tooLarge": "File too large (max {{maxMb}}MB): {{name}}",
     "failed": "Upload failed"
   },
+  "mention": {
+    "empty": "No matches",
+    "connectors": "Connectors",
+    "experts": "Experts",
+    "subagents": "Subagents",
+    "files": "Workspace files",
+    "typeToSearch": "Type a file name to search",
+    "typeMore": "Type at least two characters to search files",
+    "searching": "Searching…",
+    "filesEmpty": "No matching files",
+    "filesNeedAgent": "Start the agent to mention workspace files",
+    "filesFailed": "Could not search workspace files"
+  },
   "modelConfig": {
     "promptTitle": "LLM Model Required",
     "promptMessage": "Chat requires an LLM model to function. Without a configured model, conversations and messages cannot be sent to the backend for processing and storage, and will be lost after a page refresh. Would you like to configure a model now?",
