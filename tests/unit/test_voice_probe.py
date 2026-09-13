@@ -15,6 +15,7 @@ import pytest
 
 import octop.infra.voice.adapters as voice_adapters
 from octop.infra.db.repos.voice_providers import VoiceProviderRow
+from octop.infra.voice.adapters import STTResult
 from octop.infra.voice.adapters import test_stt as probe_stt
 from octop.infra.voice.adapters import test_tts as probe_tts
 
@@ -71,12 +72,18 @@ async def test_missing_row_is_reported() -> None:
     assert await probe_tts(None, "mimo") == {"ok": False, "error": "provider not configured"}
 
 
+async def _stt_ok(row: VoiceProviderRow, audio: bytes, *, mime: str, language: str) -> STTResult:
+    return STTResult(text="")
+
+
 @pytest.mark.asyncio
 async def test_openai_and_mimo_keep_api_key_check(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(voice_adapters, "synthesize_openai", _stream(b"audio"))
     monkeypatch.setattr(voice_adapters, "synthesize_mimo", _stream(b"audio"))
+    monkeypatch.setattr(voice_adapters, "transcribe_openai", _stt_ok)
+    monkeypatch.setattr(voice_adapters, "transcribe_mimo", _stt_ok)
     for kind in ("openai", "mimo"):
         assert await probe_stt(_row(kind=kind, api_key=None), kind) == {
             "ok": False,
@@ -99,7 +106,10 @@ async def test_edge_success_and_failure(monkeypatch: pytest.MonkeyPatch) -> None
 
 
 @pytest.mark.asyncio
-async def test_tencent_credentials_from_extra_are_accepted() -> None:
+async def test_tencent_credentials_from_extra_are_accepted(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(voice_adapters, "transcribe_tencent", _stt_ok)
     row = _row(kind="tencent", api_key=None, extra=TENCENT_EXTRA)
     assert await probe_stt(row, "tencent") == {"ok": True, "mode": "tencent"}
 
