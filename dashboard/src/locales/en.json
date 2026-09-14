@@ -1,6 +1,6 @@
 {
   "app": {
-    "pageTitle": "Octop - Born for Cloud, Knows You Better"
+    "pageTitle": "Octop - An intelligent partner that understands you, helps you, and grows with you"
   },
   "layout": {
     "collapsePanel": "Collapse panel",
@@ -3025,6 +3025,13 @@
       "description": "Check for the latest release and upgrade in place; use the guide on the right for other install methods.",
       "panelTitle": "Version upgrade",
       "panelDesc": "Check for a new release and install it when supported. Restart the service after a successful upgrade.",
+      "stableOnlyLabel": "Stable releases only",
+      "stableOnlyHint": "Automatic checks do not remind you about alpha, beta, rc, or dev builds. You can still check and upgrade to a pre-release manually.",
+      "prereleaseBadge": "Pre-release",
+      "prereleaseHint": "v{{version}} is a pre-release test build.",
+      "prereleaseConfirmTitle": "Upgrade to a pre-release?",
+      "prereleaseConfirmBody": "v{{version}} is a test build and may be unstable. Upgrade anyway?",
+      "prereleaseConfirmCancel": "Cancel",
       "currentVersion": "Current Version",
       "latestVersion": "Latest Version",
       "checkButton": "Check for Updates",
@@ -4464,7 +4471,7 @@
   },
   "login": {
     "title": "Sign in",
-    "subtitle": "Multi-user, multi-Agent AI server",
+    "subtitle": "An intelligent partner that understands you, helps you, and grows with you",
     "username": "Username or email",
     "password": "Password",
     "submit": "Sign in",
