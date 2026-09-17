@@ -523,16 +523,6 @@ cd dashboard && npx tsc --noEmit
 
 > 这些 `harness-*` 项目正在筹备开源中，仓库地址将在发布后补充。
 
-### 💬 客户企业微信群
-
-如需加入客户企业微信服务群，请扫码：
-
-<p align="center">
-  <img src="docs/assets/qrcode.png" alt="客户企业微信服务群二维码" width="220" />
-</p>
-
-> 请扫码进入工作群，如有任何疑问或需求，请直接联系群管理员对接处理。
-
 ### 📄 许可证
 
 本项目采用 [MIT License](LICENSE)。

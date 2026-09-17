@@ -313,7 +313,6 @@ See [`.env.example`](.env.example) for the full list.
   - [Contributing](#-contributing)
   - [Changelog](#-changelog)
   - [Related projects](#-related-projects)
-  - [WeCom customer group](#-wecom-customer-group-cn)
   - [License](#-license)
 
 ## 📦 Install options
@@ -528,16 +527,6 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 | harness-browser | CDP browser automation with persistent profiles |
 
 > These `harness-*` projects are being prepared for open-sourcing; repository links will be added once they are published.
-
-## 💬 WeCom Customer Group (CN)
-
-For the customer WeCom support group, scan:
-
-<p align="center">
-  <img src="docs/assets/qrcode.png" alt="WeCom customer group QR code" width="220" />
-</p>
-
-> Please scan the QR code to join the group. For any questions or assistance, please contact the group admin directly.
 
 ## 📄 License
 
