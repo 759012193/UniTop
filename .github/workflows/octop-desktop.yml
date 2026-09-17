@@ -254,12 +254,6 @@ jobs:
       # APPLE_CERT_PASSWORD, KEYCHAIN_PASSWORD, plus manual replacement of
       # <TODO: cert CN> below with the Developer ID Application cert's
       # Common Name. Runs only on darwin-{arm64,amd64} matrix legs.
-      #
-      # Artifact basenames below are still `UniTop-desktop-*` per Task 11 scope;
-      # Task 13 will rename them to `UniTop-*` (APP_NAME in desktop/src/Taskfile.yml
-      # is already "UniTop" and the wails3 task already emits UniTop-*.dmg).
-      # The codesign / notarytool paths below MUST be reviewed when the
-      # rename lands so they continue to match the wails3 output.
       - name: Import signing certificate
         if: matrix.plat == 'darwin-arm64' || matrix.plat == 'darwin-amd64'
         env:
@@ -304,13 +298,6 @@ jobs:
       # AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_SUBSCRIPTION_ID, and
       # AZURE_DLIB_PATH (base64 of the .dlib metadata file from the Trusted
       # Signing account). Runs only on windows-{amd64,arm64} matrix legs.
-      #
-      # Artifact basename below is still `UniTop-desktop-windows-*` per Task 12
-      # scope; Task 13 will rename it to `UniTop-desktop-windows-*` (APP_NAME in
-      # desktop/src/Taskfile.yml is already "UniTop" and the wails3 task already
-      # emits UniTop-*.exe). The trusted-signing-action files list MUST be
-      # reviewed when the rename lands so it continues to match the wails3
-      # output.
       #
       # Endpoint `https://eus.codesigning.azure.net/` is the East US Trusted
       # Signing endpoint — change if the signing account is in a different
