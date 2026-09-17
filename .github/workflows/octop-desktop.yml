@@ -249,6 +249,57 @@ jobs:
           VERSION=${{ env.OCTOP_VERSION }}
           PORTABLE_ZIP=../portable/release/Octop-portable-${{ matrix.plat }}-${{ env.OCTOP_VERSION }}.zip
 
+      # macOS codesign + notarization — requires GH Secrets APPLE_TEAM_ID,
+      # APPLE_KEY_ID, APPLE_ISSUER_ID, APPLE_API_KEY_P8, APPLE_CERT_P12,
+      # APPLE_CERT_PASSWORD, KEYCHAIN_PASSWORD, plus manual replacement of
+      # <TODO: cert CN> below with the Developer ID Application cert's
+      # Common Name. Runs only on darwin-{arm64,amd64} matrix legs.
+      #
+      # Artifact basenames below are still `Octop-desktop-*` per Task 11 scope;
+      # Task 13 will rename them to `UniTop-*` (APP_NAME in desktop/src/Taskfile.yml
+      # is already "UniTop" and the wails3 task already emits UniTop-*.dmg).
+      # The codesign / notarytool paths below MUST be reviewed when the
+      # rename lands so they continue to match the wails3 output.
+      - name: Import signing certificate
+        if: matrix.plat == 'darwin-arm64' || matrix.plat == 'darwin-amd64'
+        env:
+          P12: ${{ secrets.APPLE_CERT_P12 }}
+          P12_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+            KEYCHAIN=build.keychain-db
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN
+            security set-keychain-settings -lut 21600 $KEYCHAIN
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN
+            echo "$P12" | base64 --decode > /tmp/cert.p12
+            security import /tmp/cert.p12 -k $KEYCHAIN -P "$P12_PASSWORD" -T /usr/bin/codesign
+            security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN
+
+      - name: Codesign .app
+        if: matrix.plat == 'darwin-arm64' || matrix.plat == 'darwin-amd64'
+        working-directory: desktop/src
+        run: |
+            # Replace <TODO: cert CN> with the cert's Common Name (e.g. "Your Name")
+            SIGN_IDENTITY="Developer ID Application: <TODO: cert CN> (${{ secrets.APPLE_TEAM_ID }})"
+            codesign --deep --force --options runtime --timestamp \
+                     --sign "$SIGN_IDENTITY" \
+                     bin/Octop-desktop-darwin-${{ matrix.arch }}-${{ env.OCTOP_VERSION }}.app
+
+      - name: Notarize .dmg
+        if: matrix.plat == 'darwin-arm64' || matrix.plat == 'darwin-amd64'
+        working-directory: desktop/src
+        env:
+          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        run: |
+            echo "$APPLE_API_KEY_P8" | base64 --decode > /tmp/AuthKey_$APPLE_KEY_ID.p8
+            xcrun notarytool submit bin/Octop-desktop-darwin-${{ matrix.arch }}-${{ env.OCTOP_VERSION }}.dmg \
+              --key /tmp/AuthKey_$APPLE_KEY_ID.p8 \
+              --key-id "$APPLE_KEY_ID" --issuer "$APPLE_ISSUER_ID" \
+              --wait
+            xcrun stapler staple bin/Octop-desktop-darwin-${{ matrix.arch }}-${{ env.OCTOP_VERSION }}.dmg
+
       # archive: false — upload the prebuilt zip as-is. Default archive=true would
       # wrap it again, so Actions UI / "Download artifact" becomes zip-in-zip.
       # With archive:false, artifact name is the filename (name: is ignored).
