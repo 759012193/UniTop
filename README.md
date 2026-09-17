@@ -1,6 +1,10 @@
 <p align="center">
-  <img src="docs/assets/readme-banner.png" alt="Octop Banner" width="600" />
+  <img src="docs/assets/readme-banner.png" alt="UniTop Banner" width="600" />
 </p>
+
+> **Fork notice:** This is **UniTop**, a rebranded fork of
+> [TencentCloud/Octop](https://github.com/TencentCloud/Octop) (MIT).
+> See [AGENTS.md](./AGENTS.md) for fork policy and [LICENSE](./LICENSE) for original terms.
 
 <p align="center">
   <strong>A smarter, self-hosted AI assistant — multi-user, multi-agent.</strong>
@@ -39,7 +43,7 @@
 
 ---
 
-**Octop** is an open-source, self-hosted AI assistant. It's not just a tool — it's a digital life form that can operate in parallel. Through its multi-agent architecture, it builds an intelligent environment that is both independent and collaborative for teams, families, and individuals. Best of all, it runs entirely on your machine — the fully self-hosted design means privacy is never a compromise, while single-process startup makes the powerful web console, CLI, and IM integrations readily accessible.
+**UniTop** is an open-source, self-hosted AI assistant. It's not just a tool — it's a digital life form that can operate in parallel. Through its multi-agent architecture, it builds an intelligent environment that is both independent and collaborative for teams, families, and individuals. Best of all, it runs entirely on your machine — the fully self-hosted design means privacy is never a compromise, while single-process startup makes the powerful web console, CLI, and IM integrations readily accessible.
 
 Chat through the Web Dashboard, Feishu, DingTalk, QQ, Discord, WeCom, or programmatic HTTP/SSE/WebSocket. Extend capabilities with the **expert library**, **Connectors** (OAuth + MCP), and **ACP** integration for IDE workflows.
 
@@ -54,7 +58,7 @@ Chat through the Web Dashboard, Feishu, DingTalk, QQ, Discord, WeCom, or program
 | 💾 | **Pluggable backends** | Local disk, Docker containers, PostgreSQL, or COS/S3 — AI operates inside isolated boundaries |
 | 🧠 | **Portable memory** | Powered by harness-memory; memory migrates with the workspace |
 | 📚 | **Knowledge base** | RAG over your documents; semantic retrieval grounds agent answers in your private corpus |
-| 🧩 | **Plugins** | Extend Octop with third-party plugins; bundled plugins are seeded and toggled on demand |
+| 🧩 | **Plugins** | Extend UniTop with third-party plugins; bundled plugins are seeded and toggled on demand |
 | ↔️ | **ACP bidirectional** | `octop acp` for IDE/terminal AI; delegate to OpenCode / Claude Code with permission gates |
 | 💻 | **Terminal AI+** | Interactive shell in the browser — AI-assisted command execution and troubleshooting |
 | 🌐 | **Browser AI+** | Headless Chromium sessions for web automation, screenshots, and remote browsing |
@@ -63,12 +67,12 @@ Chat through the Web Dashboard, Feishu, DingTalk, QQ, Discord, WeCom, or program
 
 ## 📌 Overview
 
-Octop is a self-hosted AI assistant platform for households and small teams. It runs a single process that serves a web dashboard, a CLI, IM channels (Feishu, DingTalk, QQ, Discord, WeCom, and more), and cron automation — all sharing one control-plane database under `~/.octop/` (SQLite by default; PostgreSQL optional).
+UniTop is a self-hosted AI assistant platform for households and small teams. It runs a single process that serves a web dashboard, a CLI, IM channels (Feishu, DingTalk, QQ, Discord, WeCom, and more), and cron automation — all sharing one control-plane database under `~/.octop/` (SQLite by default; PostgreSQL optional).
 
-> Octop's design goal: keep every conversation, workspace, and credential on your own machine, while giving each user a personal team of specialized agents they can switch between per task.
+> UniTop's design goal: keep every conversation, workspace, and credential on your own machine, while giving each user a personal team of specialized agents they can switch between per task.
 
 <details>
-<summary>🐾 What can you do with Octop</summary>
+<summary>🐾 What can you do with UniTop</summary>
 
 - **Personal assistant** — let a dedicated agent write weekly reports, organize notes, and manage your schedule; memory persists with the workspace.
 - **Family sharing** — one admin account, the whole household; assign different agents and experts per member.
@@ -93,14 +97,14 @@ Octop is a self-hosted AI assistant platform for households and small teams. It 
 | **ACP** | agent-client-protocol |
 | **Build / quality** | hatchling · ruff · mypy · pytest |
 
-Octop is built on the Harness stack — a set of focused runtimes that Octop composes into one process:
+UniTop is built on the Harness stack — a set of focused runtimes that UniTop composes into one process:
 
 - **harness-agent** — Agent runtime: model routing, tools, skills, and conversation checkpointing.
 - **harness-gateway** — multi-platform IM channel bridge that normalizes incoming messages into a single processing pipeline.
 - **harness-memory** — hierarchical recall with full-text search, so an agent's memory travels with its workspace.
 - **harness-browser** — CDP-based browser automation with persistent profiles for web tasks.
 
-Instead of an external queue or message broker, Octop routes every surface — Web UI, IM, and cron — through one in-process `HarnessProcessor`. The result is a single, restart-safe process whose entire state is rebuilt from the control-plane database on boot (local SQLite by default; PostgreSQL optional).
+Instead of an external queue or message broker, UniTop routes every surface — Web UI, IM, and cron — through one in-process `HarnessProcessor`. The result is a single, restart-safe process whose entire state is rebuilt from the control-plane database on boot (local SQLite by default; PostgreSQL optional).
 
 ## 🤔 Features
 
@@ -131,14 +135,14 @@ Instead of an external queue or message broker, Octop routes every surface — W
 
 ### ACP (Agent Client Protocol)
 
-Octop supports ACP in two directions:
+UniTop supports ACP in two directions:
 
-1. **Inbound** — external tools use **your** Octop agent
+1. **Inbound** — external tools use **your** UniTop agent
    ```bash
    octop acp --agent main   # stdio ACP server for Zed, OpenCode, …
    ```
 
-2. **Outbound** — Octop delegates to external coding agents
+2. **Outbound** — UniTop delegates to external coding agents
    - Dashboard → **ACP** (`/acp`): configure runners (global per user)
    - Enable **acp_runner** per agent, then delegate in chat
 
@@ -212,10 +216,10 @@ See [scripts/README.md](scripts/README.md) for all install options (`--version`,
 
 | Platform | Artifact |
 |----------|----------|
-| Windows | `Octop-desktop-windows-amd64-<version>.exe` (64-bit) / `Octop-desktop-windows-arm64-<version>.exe` (ARM64) — NSIS installer |
-| macOS | `Octop-desktop-darwin-arm64-<version>.dmg` (Apple Silicon) / `Octop-desktop-darwin-amd64-<version>.dmg` (Intel) |
-| Linux | `Octop-desktop-linux-amd64-<version>.tar.gz` / `Octop-desktop-linux-arm64-<version>.tar.gz` |
-| FnOS NAS | `Octop-fnos-docker-<version>.fpk` (Docker-backed) / `Octop-fnos-native-<version>.fpk` (no Docker) — install via App Center |
+| Windows | `UniTop-desktop-windows-amd64-<version>.exe` (64-bit) / `UniTop-desktop-windows-arm64-<version>.exe` (ARM64) — NSIS installer |
+| macOS | `UniTop-desktop-darwin-arm64-<version>.dmg` (Apple Silicon) / `UniTop-desktop-darwin-amd64-<version>.dmg` (Intel) |
+| Linux | `UniTop-desktop-linux-amd64-<version>.tar.gz` / `UniTop-desktop-linux-arm64-<version>.tar.gz` |
+| FnOS NAS | `UniTop-fnos-docker-<version>.fpk` (Docker-backed) / `UniTop-fnos-native-<version>.fpk` (no Docker) — install via App Center |
 
 See [desktop/README.md](desktop/README.md) for the desktop shell and [fnos/README.md](fnos/README.md) for the FnOS packaging guide.
 
@@ -379,7 +383,7 @@ OpenAI-compatible APIs, DashScope (Qwen), Ollama, and other presets — configur
 | Command | Description |
 |---------|-------------|
 | `octop init` | Bootstrap `~/.octop/` (DB, admin, JWT secret) |
-| `octop run` | Start Octop in the foreground |
+| `octop run` | Start UniTop in the foreground |
 | `octop service start` | Install and start as a system service |
 | `octop service stop` | Stop the system service |
 | `octop agent` | Create, list, start/stop agents |
@@ -401,7 +405,7 @@ Full reference: **[docs/cli.md](docs/cli.md)**.
 After `octop run`, open **http://127.0.0.1:8088**.
 
 <p align="center">
-  <img src="docs/assets/readme-chat.png" alt="Octop Web Dashboard" width="800" />
+  <img src="docs/assets/readme-chat.png" alt="UniTop Web Dashboard" width="800" />
 </p>
 
 - **Chat** — real-time conversation with agents

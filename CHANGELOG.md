@@ -4,6 +4,17 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)，版本号遵循 [语义化版本规范](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased] — UniTop fork
+
+- Forked from [TencentCloud/Octop](https://github.com/TencentCloud/Octop) at upstream/main
+- Cosmetic rebrand: Octop → UniTop (UI, desktop app, NAS package, README)
+- Removed Tencent Cloud active promotion (WeCom QR, COS install URLs, default connectors)
+- Added macOS code signing + notarization
+- Added Windows code signing (Azure Trusted Signing)
+- Discontinued PyPI publishing from this fork (package `octop` is owned by TencentCloud on PyPI)
+
+## [Upstream Changelog](https://github.com/TencentCloud/Octop/blob/main/CHANGELOG.md)
+
 ## [Unreleased]
 
 ## [1.0.0] - 2026-09-14

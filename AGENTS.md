@@ -1,3 +1,35 @@
+# UniTop fork policy
+
+This repository is a rebranded fork of
+[TencentCloud/Octop](https://github.com/TencentCloud/Octop), licensed under MIT.
+
+## Rebrand scope
+
+User-facing surfaces only: project name, desktop app name, README, web dashboard,
+docs. **Runtime identifiers preserved**: Python package `octop`, CLI command
+`octop`, data path `~/.octop/`, Docker image, environment variables.
+
+## Upstream attribution
+
+We retain the upstream LICENSE file and `LICENSE` references throughout. We
+do not remove `TencentCloud/Octop` references that are necessary for upstream
+attribution. We do remove Tencent Cloud **active promotion** (WeCom QR,
+COS-hosted installer, default connector bundles).
+
+## Syncing upstream
+
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+git checkout unitop/branding
+git rebase main
+```
+
+## Original work below
+
+---
+
 # AGENTS.md
 
 Navigation guide for AI coding agents working in this repository.
