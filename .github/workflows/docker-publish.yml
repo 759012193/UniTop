@@ -1,8 +1,8 @@
 name: Docker Publish
 
-# 仅在版本标签（v*）上构建并同步发布镜像到 Docker Hub 与 GHCR。
-# 文档与对外引用统一使用：ghcr.io/tencentcloud/octop
-# （Hub 仍用 DOCKERHUB_* secrets 同步推送。）
+# 仅在版本标签（v*）上构建并同步发布镜像到 GHCR。
+# Docker Hub 发布已禁用（UniTop rebrand spec Q2 默认：fork owner 未配置 Docker Hub 账号）。
+# 文档与对外引用统一使用：ghcr.io/759012193/unitop
 #
 # 触发路径：
 #   1. 人工推送 v* tag → on.push.tags
@@ -14,8 +14,8 @@ name: Docker Publish
 # FnOS FPK 由 Release 成功后自动 dispatch，并等待本工作流推送的 :{version} 就绪。
 #
 # 拉取示例：
-#   docker pull ghcr.io/tencentcloud/octop:latest
-#   docker pull ghcr.io/tencentcloud/octop:0.9.28
+#   docker pull ghcr.io/759012193/unitop:latest
+#   docker pull ghcr.io/759012193/unitop:0.9.28
 on:
   push:
     tags:
@@ -57,11 +57,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Disabled: UniTop does not publish to Docker Hub (rebrand spec Q2 default).
+      # - name: Log in to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -74,14 +75,16 @@ jobs:
         id: image
         run: |
           echo "ghcr=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
-          echo "hub=${{ secrets.DOCKERHUB_USERNAME }}/octop" >> "$GITHUB_OUTPUT"
+          # Disabled: Docker Hub publishing off (rebrand spec Q2 default).
+          # echo "hub=${{ secrets.DOCKERHUB_USERNAME }}/octop" >> "$GITHUB_OUTPUT"
 
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ steps.image.outputs.hub }}
+            # Disabled: Docker Hub image (rebrand spec Q2 default).
+            # ${{ steps.image.outputs.hub }}
             ${{ steps.image.outputs.ghcr }}
           # 显式 raw tag：兼容 push.tags 与 Auto Tag 的 workflow_dispatch
           tags: |
