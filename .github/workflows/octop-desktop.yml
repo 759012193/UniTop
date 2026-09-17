@@ -300,6 +300,40 @@ jobs:
               --wait
             xcrun stapler staple bin/Octop-desktop-darwin-${{ matrix.arch }}-${{ env.OCTOP_VERSION }}.dmg
 
+      # Windows Azure Trusted Signing — requires GH Secrets AZURE_TENANT_ID,
+      # AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_SUBSCRIPTION_ID, and
+      # AZURE_DLIB_PATH (base64 of the .dlib metadata file from the Trusted
+      # Signing account). Runs only on windows-{amd64,arm64} matrix legs.
+      #
+      # Artifact basename below is still `Octop-desktop-windows-*` per Task 12
+      # scope; Task 13 will rename it to `UniTop-desktop-windows-*` (APP_NAME in
+      # desktop/src/Taskfile.yml is already "UniTop" and the wails3 task already
+      # emits UniTop-*.exe). The trusted-signing-action files list MUST be
+      # reviewed when the rename lands so it continues to match the wails3
+      # output.
+      #
+      # Endpoint `https://eus.codesigning.azure.net/` is the East US Trusted
+      # Signing endpoint — change if the signing account is in a different
+      # region (e.g. westus / wus / global).
+      - name: Azure login
+        if: matrix.plat == 'windows-amd64' || matrix.plat == 'windows-arm64'
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Sign .exe
+        if: matrix.plat == 'windows-amd64' || matrix.plat == 'windows-arm64'
+        working-directory: desktop/src
+        uses: azure/trusted-signing-action@v0
+        with:
+          azure-signing-path: ${{ secrets.AZURE_DLIB_PATH }}
+          endpoint: https://eus.codesigning.azure.net/
+          files:
+            - bin/Octop-desktop-windows-${{ matrix.arch }}-${{ env.OCTOP_VERSION }}.exe
+          file-digest: SHA256
+          timestamp-digest: SHA256
+          timestamp-rfc3161: http://timestamp.digicert.com
+
       # archive: false — upload the prebuilt zip as-is. Default archive=true would
       # wrap it again, so Actions UI / "Download artifact" becomes zip-in-zip.
       # With archive:false, artifact name is the filename (name: is ignored).
