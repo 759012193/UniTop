@@ -176,19 +176,19 @@ UniTop 支持两个方向的 ACP 集成：
 **macOS / Linux** — 一键安装（推荐）：
 
 ```bash
-curl -fsSL https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install.sh | bash
+curl -fsSL https://github.com/759012193/UniTop/releases/latest/download/install.sh | bash
 ```
 
 **Windows（PowerShell）**：
 
 ```powershell
-irm https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install.ps1 | iex
+irm https://github.com/759012193/UniTop/releases/latest/download/install.ps1 | iex
 ```
 
 **Windows（cmd）** — 下载后运行，或从已克隆的仓库执行：
 
 ```bat
-curl -fsSL https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install.bat -o install.bat
+curl -fsSL https://github.com/759012193/UniTop/releases/latest/download/install.bat -o install.bat
 install.bat
 ```
 
@@ -204,10 +204,10 @@ source ~/.bashrc  # Bash
 
 ```bash
 # 浏览器自动化（Playwright Chromium）
-curl -fsSL https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install.sh | bash -s -- --extras browser
+curl -fsSL https://github.com/759012193/UniTop/releases/latest/download/install.sh | bash -s -- --extras browser
 
 # 飞书通道支持
-curl -fsSL https://finnie-1258344699.cos.ap-guangzhou.myqcloud.com/octop/install.sh | bash -s -- --extras channels-feishu
+curl -fsSL https://github.com/759012193/UniTop/releases/latest/download/install.sh | bash -s -- --extras channels-feishu
 ```
 
 完整安装选项见 [scripts/README.md](scripts/README.md)（`--version`、`--from-source`、`--mirror` 及 Windows 参数）。
