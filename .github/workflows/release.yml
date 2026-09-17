@@ -63,7 +63,8 @@ jobs:
           path: dist/
 
   publish:
-    name: Publish to PyPI
+    if: false  # Disabled: UniTop does not publish to PyPI — `octop` is owned by TencentCloud on PyPI
+    name: Publish to PyPI (disabled)
     needs: build
     runs-on: ubuntu-latest
     environment: pypi
@@ -74,10 +75,8 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish package (no-op)
+        run: echo "PyPI publish disabled in UniTop fork"
 
   github-release:
     name: Create GitHub Release
